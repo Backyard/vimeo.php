@@ -1,5 +1,8 @@
 # Vimeo
 
+Fork of original vimeo.php. 
+Completion request after upload is delayed and run multiple times so not throwing exception on first error.
+
 [![License](https://img.shields.io/packagist/l/vimeo/vimeo-api.svg?style=flat-square)](https://packagist.org/packages/vimeo/vimeo-api)
 [![Development Version](https://img.shields.io/packagist/v/vimeo/vimeo-api.svg?style=flat-square)](https://packagist.org/packages/vimeo/vimeo-api)
 [![Travis CI](http://img.shields.io/travis/vimeo/vimeo.php.svg?style=flat-square)](https://travis-ci.org/vimeo/vimeo.php)
