@@ -539,7 +539,7 @@ class Vimeo
             // Validate that we got back 201 Created
             $status = (int) $completion['status'];
             $completed = ($status == 201);
-        } while($completed OR $completionRequestCount < self::UPLOAD_COMPLETION_REQUEST_COUNT);
+        } while(!$completed AND $completionRequestCount < self::UPLOAD_COMPLETION_REQUEST_COUNT);
 
         if ($status != 201) {
             $error = !empty($completion['body']['error']) ? '[' . $completion['body']['error'] . ']' : '';
