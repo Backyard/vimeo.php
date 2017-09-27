@@ -34,6 +34,7 @@ class Vimeo
     const VERSION_STRING = 'application/vnd.vimeo.*+json; version=3.2';
     const USER_AGENT = 'vimeo.php 1.2.6; (http://developer.vimeo.com/api/docs)';
     const CERTIFICATE_PATH = '/certificates/vimeo-api.pem';
+    const UPLOAD_COMPLETION_REQUEST_COUNT = 10;
 
     protected $_curl_opts = array();
     protected $CURL_DEFAULTS = array();
@@ -528,12 +529,19 @@ class Vimeo
             $server_at = (int)$server_at;
         } while ($server_at < $size);
 
-        // Complete the upload on the server.
-        $completion = $this->request($ticket['body']['complete_uri'], array(), 'DELETE');
+        $completionRequestCount = 0;
+        do {
+            $completionRequestCount++;
+            sleep($completionRequestCount);
+            // Complete the upload on the server.
+            $completion = $this->request($ticket['body']['complete_uri'], array(), 'DELETE');
 
-        // Validate that we got back 201 Created
-        $status = (int) $completion['status'];
-        if ($status !== 201) {
+            // Validate that we got back 201 Created
+            $status = (int) $completion['status'];
+            $completed = ($status == 201);
+        } while($completed OR $completionRequestCount < self::UPLOAD_COMPLETION_REQUEST_COUNT);
+
+        if ($status != 201) {
             $error = !empty($completion['body']['error']) ? '[' . $completion['body']['error'] . ']' : '';
             throw new VimeoUploadException('Error completing the upload.'. $error);
         }
